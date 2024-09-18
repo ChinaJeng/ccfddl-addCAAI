@@ -58,7 +58,6 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
         chmod 600 ~/.ssh/id_rsa
-        ssh -v -i ~/.ssh/id_rsa root@${{ secrets.SERVER_HOST }}
         cd dist
         git init
         git remote add origin ${{ secrets.SERVER_URL }}
