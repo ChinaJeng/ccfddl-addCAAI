@@ -62,4 +62,4 @@ jobs:
         git remote add origin ${{ secrets.SERVER_URL }}
         git add --all
         git commit -m "Site Update: $(date +'%Y-%m-%d %H:%M:%S')"
-        git push --force origin master:main
+        git push --force origin main
