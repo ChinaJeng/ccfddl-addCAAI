@@ -7,5 +7,4 @@ module.exports = {
             title: 'ccf-deadlines',
         }
     },
-    publicPath: '/ccf-caaiddl/'
 }
