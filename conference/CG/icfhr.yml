@@ -1,0 +1,17 @@
+  - title: ICFHR
+    description: International Conference on Frontiers in Handwriting Recognition
+    sub: N
+    sub_caai: PRCV
+    rank:
+      caai: C
+    dblp: ICFHR
+    confs:
+      - year: 2022
+        id: icfhr22
+        link: https://icfhr2022.org/
+        timeline:
+          - deadline: '2022-7-10 23:59:59'
+        timezone: UTC+0
+        date: December 8-11, 2023
+        place: Hyderabad, India
+

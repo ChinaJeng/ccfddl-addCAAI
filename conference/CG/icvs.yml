@@ -1,13 +1,12 @@
-  - title: ICIP
-    description: The IEEE International Conference on Image Processing
-    sub: CG
+  - title: ICVS
+    description: International Conference on Computer Vision Systems
+    sub: N
     sub_caai: PRCV
     rank:
       ccf: C
       caai: C
-      core: B
-      thcpl: B
-    dblp: ICIP
+      core: C
+    dblp: ICVS
     confs:
       - year: 2023
         id: icip23
