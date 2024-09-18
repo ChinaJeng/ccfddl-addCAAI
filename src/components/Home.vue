@@ -168,6 +168,7 @@
                 effect="plain"
                 >THCPL {{ scope.row.thcplrank }}</el-tag
               >
+              
               <span style="color: #409eff" v-show="scope.row.comment"
                 ><b>NOTE:</b> {{ scope.row.comment }}</span
               ></el-row
