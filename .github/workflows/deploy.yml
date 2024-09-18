@@ -60,9 +60,6 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         git remote rm origin
         git remote add origin ${{ secrets.SERVER_URL }}
-        git stash
-        git pull origin main
-        git stash pop
         git add --all
         git commit -m "Site Update: $(date +'%Y-%m-%d %H:%M:%S')"
         git push --force origin main
