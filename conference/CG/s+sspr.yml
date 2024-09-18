@@ -1,13 +1,11 @@
-  - title: ICIP
-    description: The IEEE International Conference on Image Processing
-    sub: CG
+  - title: S+SSPR
+    description: Joint IAPR International Workshops on Statistical Techniques in Pattern Recognition and Structural and Syntactic Pattern Recognition
+    sub: N
     sub_caai: PRCV
     rank:
-      ccf: C
       caai: C
-      core: B
-      thcpl: B
-    dblp: ICIP
+      core: C
+    dblp: DAS
     confs:
       - year: 2023
         id: icip23

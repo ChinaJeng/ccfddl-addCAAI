@@ -1,0 +1,18 @@
+  - title: IJCB
+    description: International Joint Conference on Biometrics
+    sub: 
+    sub_caai: PRCV
+    rank:
+      ccf: C
+      caai: C
+      core: B
+    dblp: ICVS
+    confs:
+      - year: 2023
+        id: ijcb23
+        link: https://ijcb2023.ieee-biometrics.org/
+        timeline:
+          - deadline: '2023-07-18 23:59:59'
+        timezone: UTC+0
+        date: Sep 25-28, 2023
+        place: Ljubljana, Slovenia

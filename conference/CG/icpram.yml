@@ -1,0 +1,17 @@
+  - title: ICPRAM
+    description: International Conference on Pattern Recognition Application and Methods
+    sub: N
+    sub_caai: PRCV
+    rank:
+      caai: C
+      core: C
+    dblp: DAS
+    confs:
+      - year: 2023
+        id: icpram23
+        link: https://icpram.scitevents.org/
+        timeline:
+          - deadline: '2024-10-02 23:59:59'
+        timezone: UTC+0
+        date: Feb 23-25, 2025
+        place: porto, portugal

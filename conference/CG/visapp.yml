@@ -1,0 +1,17 @@
+  - title: VISAPP
+    description: International Conference on Computer Vision Theory and Applications
+    sub: N
+    sub_caai: PRCV
+    rank:
+      caai: C
+      core: C
+    dblp: VISAPP
+    confs:
+      - year: 2023
+        id: visapp23
+        link: https://visapp.scitevents.org/
+        timeline:
+          - deadline: '2024-10-02 23:59:59'
+        timezone: UTC+0
+        date: Feb 26-28, 2025
+        place: porto, portugal
