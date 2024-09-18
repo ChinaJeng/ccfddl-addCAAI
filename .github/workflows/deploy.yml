@@ -56,9 +56,9 @@ jobs:
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
         ssh -v -i ~/.ssh/id_rsa root@${{ secrets.SERVER_HOST }}
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
         cd dist
         git init
         git remote add origin ${{ secrets.SERVER_URL }}
