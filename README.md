@@ -3,7 +3,7 @@
 
 ## CCF-Deadlines（添加CAAI目录版）
 
-[原项目](https://github.com/ccfddl/ccf-deadline)
+[原项目](https://github.com/ccfddl/ccf-deadlines)
 
 
 ## 1. 任务

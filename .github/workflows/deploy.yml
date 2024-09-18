@@ -52,16 +52,18 @@ jobs:
       run: |
         git config --global user.email "2368878453@qq.com"
         git config --global user.name "ChinaJeng"
-    - name: Deploy
+    - name: Set up SSH
       run: |
         mkdir -p ~/.ssh
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H $(echo $SERVER_URL | awk -F@ '{print $2}' | awk -F: '{print $1}') >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
+    - name: Deploy
+      run: |
         cd dist
         git init
-        git remote add origin $SERVER_URL
+        git remote add origin ${{ secrets.SERVER_URL }}
         git add --all
-        git commit -m "Site Update: `TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S'`"
+        git commit -m "Site Update: $(date +'%Y-%m-%d %H:%M:%S')"
         git push --force origin master:main
