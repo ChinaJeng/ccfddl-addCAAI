@@ -50,11 +50,18 @@ jobs:
         yarn build
     - name: Config Git
       run: |
-        git config --global user.email "me@4f5da2.com"
-        git config --global user.name "0x4f5da2"
+        git config --global user.email "2368878453@qq.com"
+        git config --global user.name "ChinaJeng"
     - name: Deploy
       run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H $(echo $SERVER_URL | awk -F@ '{print $2}' | awk -F: '{print $1}') >> ~/.ssh/known_hosts
+
         cd dist
         git init
+        git remote add origin $SERVER_URL
         git add --all
-        git commit -m "Site Update:`TZ=':Asia/Shanghai' date +' %Y-%m-%d %H:%m:%S'`"
+        git commit -m "Site Update: `TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S'`"
+        git push --force origin master:main
