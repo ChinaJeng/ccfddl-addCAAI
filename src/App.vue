@@ -20,7 +20,7 @@ export default {
   font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  max-width: 980px;
+  max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
 }

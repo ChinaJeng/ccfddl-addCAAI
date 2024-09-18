@@ -15,7 +15,6 @@ const options = {
 }
 Vue.use(Storage, options)
 Vue.config.productionTip = false
-
 new Vue({
   render: h => h(App),
 }).$mount('#app')

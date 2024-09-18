@@ -1,13 +1,17 @@
 <template>
   <section>
-    <Header></Header>
+    <Header :timeZone="timeZone"></Header>
     <div
       style="display: flex; flex-direction: column; gap: 30px; margin-top: 20px"
     >
       <div style="flex: 1 0 auto">推荐目录：</div>
       <div style="display: flex; gap: 100px">
-        <el-radio v-model="radio" label="1">CCF</el-radio>
-        <el-radio v-model="radio" label="2">CAAI</el-radio>
+        <el-radio v-model="radio" label="1" @change="handleRadioChange"
+          >CCF</el-radio
+        >
+        <el-radio v-model="radio" label="2" @change="handleRadioChange"
+          >CAAI</el-radio
+        >
       </div>
     </div>
 
@@ -27,7 +31,11 @@
       @change="handleCheckAllChangeCAAI"
       ><span style="color: #666666">全选</span></el-checkbox
     >
-    <el-checkbox-group v-show="radio === '1'" v-model="checkList" @change="handleCheckedChange">
+    <el-checkbox-group
+      v-show="radio === '1'"
+      v-model="checkList"
+      @change="handleCheckedChange"
+    >
       <el-checkbox
         class="boxes"
         size="medium"
@@ -39,7 +47,11 @@
         }}</span></el-checkbox
       >
     </el-checkbox-group>
-    <el-checkbox-group v-show="radio === '2'" v-model="checkCAAIList" @change="handleCheckedChangeCAAI">
+    <el-checkbox-group
+      v-show="radio === '2'"
+      v-model="checkCAAIList"
+      @change="handleCheckedChangeCAAI"
+    >
       <el-checkbox
         class="boxes"
         size="medium"
@@ -52,21 +64,12 @@
       >
     </el-checkbox-group>
     <el-row class="timezone">
-      <div style="float: left">Deadlines are shown in {{ timeZone }} time.</div>
-      <div style="float: left; width: 155px">
-        <el-input
-          prefix-icon="el-icon-search"
-          size="mini"
-          v-model="input"
-          placeholder="search conference"
-          @change="handleInputChange"
-        >
-        </el-input>
-      </div>
-      <div style="float: right">
+      
+      <div style="float: left">
         <el-checkbox-group
           v-model="rankList"
           size="mini"
+          v-show="radio === '1'"
           @change="handleRankChange"
           class="rankbox"
         >
@@ -77,7 +80,46 @@
             >{{ rank }}</el-checkbox-button
           >
         </el-checkbox-group>
+
+        <el-checkbox-group
+          v-model="rankCAAIList"
+          size="mini"
+          v-show="radio === '2'"
+          @change="handleRankChange"
+          class="rankbox"
+        >
+          <el-checkbox-button
+            v-for="(rank, index) in caaioptions"
+            :label="index"
+            :key="index"
+            >{{ rank }}</el-checkbox-button
+          >
+        </el-checkbox-group>
       </div>
+      <div style="float: left; width: 200px; padding-left: 20px">
+        <el-input
+          prefix-icon="el-icon-search"
+          size="mini"
+          v-model="input"
+          placeholder="search conference"
+          @change="handleInputChange"
+        >
+        </el-input>
+      </div>
+      
+      <div style="float: right">
+        <el-pagination
+          background
+          small
+          layout="prev, pager, next"
+          :page-size="pageSize"
+          @current-change="handleCurrentChange"
+          :current-page="page"
+          :total="showNumber"
+        >
+        </el-pagination>
+      </div>
+
     </el-row>
     <el-row class="zonedivider"></el-row>
     <el-table :data="showList" :show-header="false" style="width: 100%">
@@ -106,6 +148,13 @@
                 scope.row.displayrank
               }}</el-tag>
               <el-tag
+                v-if="scope.row.caairank"
+                size="mini"
+                type=""
+                effect="plain"
+                >{{ scope.row.caairank === 'N' ? 'Non-CAAI' : 'CAAI ' + scope.row.caairank }}</el-tag
+              >
+              <el-tag
                 v-if="scope.row.corerank !== 'N'"
                 size="mini"
                 type=""
@@ -125,9 +174,16 @@
             >
             <el-row style="padding-top: 5px"
               ><span v-if="typeof scope.row.acc === 'string'"
-                >Acc. Rate: {{ scope.row.acc }} </span
-              ><span class="conf-sub">{{ scope.row.subname }}</span></el-row
+                >Acc. Rate: {{ scope.row.acc }}
+              </span></el-row
             >
+            <el-row style="padding-top: 5px"
+              ><span class="conf-sub">{{ scope.row.subname }}</span>
+              <span style="width: 10px"> </span>
+              <span class="conf-subCAAI" v-if="scope.row.subCAAIname">{{
+                scope.row.subCAAIname
+              }}</span>
+            </el-row>
           </div>
         </template>
       </el-table-column>
@@ -161,7 +217,7 @@
                     aria-hidden="true"
                     style="width: 20px; height: 20px; vertical-align: middle"
                   />
-                  <span style="padding-left: 5px">
+                  <!-- <span style="padding-left: 5px">
                     <a v-if="scope.row.status === 'TBD'">Not Available</a>
                     <a
                       v-else
@@ -170,7 +226,7 @@
                       rel="nofollow"
                       >Google Calendar</a
                     >
-                  </span>
+                  </span> -->
                 </el-row>
                 <el-row>
                   <img
@@ -179,7 +235,7 @@
                     aria-hidden="true"
                     style="width: 20px; height: 20px; vertical-align: middle"
                   />
-                  <span style="padding-left: 5px">
+                  <!-- <span style="padding-left: 5px">
                     <a v-if="scope.row.status === 'TBD'">Not Available</a>
                     <a
                       v-else
@@ -187,7 +243,7 @@
                       rel="nofollow"
                       >iCloud Calendar</a
                     >
-                  </span>
+                  </span> -->
                 </el-row>
                 <i
                   class="el-icon-date icon"
@@ -220,7 +276,7 @@
       </el-table-column>
     </el-table>
     <el-row style="padding-top: 8px">
-      <div style="float: left; color: #666666; font-size: 12px">
+      <!-- <div style="float: left; color: #666666; font-size: 12px">
         <div>
           ccf-deadlines is maintained by
           <a href="https://github.com/jacklightChen">@jacklightChen</a> and
@@ -232,19 +288,8 @@
           <a href="https://www.researchgate.net/profile/Zhihao_Chen23">him</a>
           on ResearchGate.
         </div>
-      </div>
-      <div style="float: right">
-        <el-pagination
-          background
-          small
-          layout="prev, pager, next"
-          :page-size="pageSize"
-          @current-change="handleCurrentChange"
-          :current-page="page"
-          :total="showNumber"
-        >
-        </el-pagination>
-      </div>
+      </div> -->
+      
     </el-row>
   </section>
 </template>
@@ -283,13 +328,16 @@ export default {
       timeZone: "",
       utcMap: new Map(),
       rankoptions: { A: "CCF A", B: "CCF B", C: "CCF C", N: "Non-CCF" },
+      caaioptions: { A: "CAAI A", B: "CAAI B", C: "CAAI C", N: "Non-CAAI" },
       typesList: [],
       typesCAAIList: [],
       rankList: [],
+      rankCAAIList: [],
       cachedLikes: [],
       cachedRanks: [],
+      cachedCAAIRanks: [],
       input: "",
-      radio: '1',
+      radio: "1",
     };
   },
   methods: {
@@ -318,7 +366,10 @@ export default {
           for (let i = 0; i < this.subCAAIList.length; i++) {
             this.checkCAAIList.push(this.subCAAIList[i].sub);
             this.typesCAAIList.push(this.subCAAIList[i].sub);
-            this.typeCAAIMap.set(this.subCAAIList[i].sub, this.subCAAIList[i].name);
+            this.typeCAAIMap.set(
+              this.subCAAIList[i].sub,
+              this.subCAAIList[i].name
+            );
           }
           this.loadCachedCAAITypes();
           this.getAllConf();
@@ -345,9 +396,15 @@ export default {
                 curItem.title = curConf.title;
                 curItem.description = curConf.description;
                 curItem.sub = curConf.sub;
+                curItem.sub_caai = curConf.sub_caai;
                 curItem.rank = curConf.rank.ccf;
                 curItem.corerank = curConf.rank.core;
                 curItem.thcplrank = curConf.rank.thcpl;
+                if (curConf.rank.caai) {
+                  curItem.caairank = curConf.rank.caai;
+                } else {
+                  curItem.caairank = "N";
+                }
                 curItem.displayrank = this.rankoptions[curItem.rank];
                 curItem.dblp = curConf.dblp;
                 let len = curItem.timeline.length;
@@ -394,6 +451,9 @@ export default {
             for (let i = 0; i < doc.length; i++) {
               let curDoc = doc[i];
               curDoc.subname = this.typeMap.get(curDoc.sub);
+              if (curDoc.sub_caai) {
+                curDoc.subCAAIname = this.typeCAAIMap.get(curDoc.sub_caai);
+              }
               if (curDoc.deadline === "TBD") {
                 curDoc.remain = 0;
                 curDoc.status = "TBD";
@@ -487,19 +547,39 @@ export default {
     },
     showConf(types, rank, input, page) {
       let filterList = this.allconfList;
-
-      if (types != null && types.length != 0) {
+      if (
+        this.subList != null &&
+        this.subList.length != 0 &&
+        this.radio === "1"
+      ) {
         filterList = filterList.filter(function (item) {
           return types.indexOf(item.sub.toUpperCase()) >= 0;
         });
       }
 
-      if (rank != null && rank.length > 0) {
+      if (
+        this.subCAAIList != null &&
+        this.subCAAIList.length != 0 &&
+        this.radio === "2"
+      ) {
+        filterList = filterList.filter(function (item) {
+          if (item.sub_caai) {
+            return types.indexOf(item.sub_caai.toUpperCase()) >= 0;
+          }
+        });
+      }
+      if (rank != null && rank.length > 0 && this.radio === "1") {
         filterList = filterList.filter(function (item) {
           return rank.indexOf(item.rank) >= 0;
         });
       }
 
+      if (rank != null && rank.length > 0 && this.radio === "2") {
+        filterList = filterList.filter(function (item) {
+          return rank.indexOf(item.caairank) >= 0;
+        });
+      }
+      console.log("fr", filterList);
       if (input != null && input.length > 0) {
         filterList = filterList.filter(function (item) {
           return item.id.toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -515,7 +595,6 @@ export default {
       let finList = filterList.filter(function (item) {
         return item.status === "FIN";
       });
-
       runList.sort((a, b) =>
         b.remain === a.remain ? 0 : a.remain < b.remain ? -1 : 1
       );
@@ -529,7 +608,6 @@ export default {
       allList.push.apply(allList, runList);
       allList.push.apply(allList, tbdList);
       allList.push.apply(allList, finList);
-
       for (let i = allList.length - 1; i >= 0; i--) {
         let curDoc = allList[i];
         if (curDoc.isLike === true) {
@@ -541,10 +619,12 @@ export default {
       likesList.push.apply(likesList, allList);
       this.showList = likesList;
       this.showNumber = this.showList.length;
+      console.log("showlist", this.showList);
       this.showList = this.showList.slice(
         this.pageSize * (page - 1),
         this.pageSize * page
       );
+      console.log("page1", this.showList);
       this.page = page;
     },
     transform(props) {
@@ -578,6 +658,14 @@ export default {
       this.utcMap.set("AoE", "-1200");
       this.utcMap.set("UTC", "+0000");
     },
+    handleRadioChange() {
+      this.showConf(
+        this.radio === "1" ? this.typesList : this.typesCAAIList,
+        this.rankList,
+        this.input,
+        1
+      );
+    },
     handleCheckedChange(types) {
       this.typesList = types;
       let checkedCount = types.length;
@@ -597,15 +685,32 @@ export default {
       this.showConf(this.typesCAAIList, this.rankList, this.input, 1);
     },
     handleInputChange() {
-      this.showConf(this.typesList, this.rankList, this.input, 1);
+      this.showConf(
+        this.radio === "1" ? this.typesList : this.typesCAAIList,
+        this.rankList,
+        this.input,
+        1
+      );
     },
     handleRankChange(rank) {
-      this.rankList = rank;
-      this.$ls.set("ranks", Array.from(this.rankList));
-      this.showConf(this.typesList, this.rankList, this.input, 1);
+      if (this.radio === "1") {
+        this.rankList = rank;
+        this.$ls.set("ranks", Array.from(this.rankList));
+        this.showConf(this.typesList, this.rankList, this.input, 1);
+      }
+      if (this.radio === "2") {
+        this.rankCAAIList = rank;
+        this.$ls.set("caairanks", Array.from(this.rankCAAIList));
+        this.showConf(this.typesCAAIList, this.rankCAAIList, this.input, 1);
+      }
     },
     handleCurrentChange(page) {
-      this.showConf(this.typesList, this.rankList, this.input, page);
+      this.showConf(
+        this.radio === "1" ? this.typesList : this.typesCAAIList,
+        this.rankList,
+        this.input,
+        page
+      );
     },
     handleCheckAllChange() {
       this.typesList =
@@ -619,6 +724,7 @@ export default {
               .split(",");
       this.checkList = this.typesList;
       this.isIndeterminate = false;
+
       this.$ls.set("types", Array.from(this.typesList));
       this.showConf(this.typesList, this.rankList, this.input, 1);
     },
@@ -751,6 +857,10 @@ export default {
       this.cachedRanks = this.$ls.get("ranks");
       if (!this.cachedRanks) this.cachedRanks = [];
       this.rankList = this.cachedRanks;
+
+      this.cachedCAAIRanks = this.$ls.get("caairanks");
+      if (!this.cachedCAAIRanks) this.cachedCAAIRanks = [];
+      this.rankCAAIList = this.cachedCAAIRanks;
     },
   },
   mounted() {
@@ -765,30 +875,30 @@ export default {
 
 <style scoped>
 /*/deep/ .el-table tbody tr { pointer-events:; }*/
-/deep/ .el-input--mini .el-input__inner {
+::v-deep .el-input--mini .el-input__inner {
   height: 20px;
   line-height: 20px;
 }
 
-/deep/ .el-input--mini .el-input__icon {
+::v-deep .el-input--mini .el-input__icon {
   line-height: 20px;
 }
 
-/deep/ .el-checkbox__inner {
+::v-deep .el-checkbox__inner {
   height: 20px;
   width: 20px;
 }
 
-/deep/ .el-button {
+::v-deep .el-button {
   height: 20px;
   padding: 0px 5px;
 }
 
-/deep/ .el-checkbox-button--mini .el-checkbox-button__inner {
+::v-deep .el-checkbox-button--mini .el-checkbox-button__inner {
   padding: 3px 10px;
 }
 
-/deep/ .el-checkbox__inner::after {
+::v-deep .el-checkbox__inner::after {
   -webkit-box-sizing: content-box;
   box-sizing: content-box;
   content: "";
@@ -810,7 +920,7 @@ export default {
   transform-origin: center;
 }
 
-/deep/ .el-checkbox__input.is-indeterminate .el-checkbox__inner::before {
+::v-deep .el-checkbox__input.is-indeterminate .el-checkbox__inner::before {
   height: 6px;
   top: 6px;
 }
@@ -857,6 +967,15 @@ a {
 
 .conf-sub {
   color: rgb(36, 101, 191);
+  background: rgba(236, 240, 241, 0.7);
+  font-size: 13px;
+  padding: 3px 5px;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.conf-subCAAI {
+  color: rgb(202, 0, 0);
   background: rgba(236, 240, 241, 0.7);
   font-size: 13px;
   padding: 3px 5px;
