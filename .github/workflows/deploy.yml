@@ -58,4 +58,3 @@ jobs:
         git init
         git add --all
         git commit -m "Site Update:`TZ=':Asia/Shanghai' date +' %Y-%m-%d %H:%m:%S'`"
-        git push --force https://${{ secrets.ACCESS_TOKEN }}@github.com/ccfddl/ccfddl.github.io.git master:page
