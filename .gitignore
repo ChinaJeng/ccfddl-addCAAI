@@ -1,7 +1,5 @@
 .DS_Store
 node_modules
-dist
-public/conference
 
 
 # local env files
