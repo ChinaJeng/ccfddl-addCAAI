@@ -48,20 +48,14 @@ jobs:
         yarn config set strict-ssl false 
         yarn install
         yarn build
-    - name: Config Git
-      run: |
-        git config --global user.email "2368878453@qq.com"
-        git config --global user.name "ChinaJeng"
     - name: Deploy
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
         chmod 600 ~/.ssh/id_rsa
-        git remote rm origin
-        git remote add origin ${{ secrets.SERVER_URL }}
-        git add --all
-        git commit -m "Site Update: $(date +'%Y-%m-%d %H:%M:%S')"
-        git push --force origin main
-
+        scp -r ./dist ${{ secrets.SERVER_URL }} 
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        
     
